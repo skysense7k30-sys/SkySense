@@ -27,7 +27,7 @@ const fadeIn = {
 };
 
 export default function HeroSection() {
-  const sceneRef = useRef<HTMLDivElement>(null);
+  const sceneRef = useRef(null);
 
   const handleSceneReady = useCallback(() => {
     const el = sceneRef.current;

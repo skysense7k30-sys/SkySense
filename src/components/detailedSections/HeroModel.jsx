@@ -4,12 +4,8 @@ import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
-interface HeroModelProps {
-  onReady?: () => void;
-}
-
-export default function HeroModel({ onReady }: HeroModelProps) {
-  const mountRef = useRef<HTMLDivElement>(null);
+export default function HeroModel({ onReady }) {
+  const mountRef = useRef(null);
 
   useEffect(() => {
     const mount = mountRef.current;
@@ -54,18 +50,15 @@ export default function HeroModel({ onReady }: HeroModelProps) {
     let prevX = 0;
     let prevY = 0;
 
-    // Current rotation driven by drag
-    let rotY = -0.3;  // matches initial rotation.y
-    let rotX = 0.08;  // matches initial rotation.x
+    let rotY = -0.3;
+    let rotX = 0.08;
 
-    // Velocity for momentum / inertia
     let velX = 0;
     let velY = 0;
 
-    // Auto-spin — fades back in after drag settles
     let autoSpin = 0.004;
 
-    const onPointerDown = (e: PointerEvent) => {
+    const onPointerDown = (e) => {
       isDragging = true;
       prevX = e.clientX;
       prevY = e.clientY;
@@ -76,7 +69,7 @@ export default function HeroModel({ onReady }: HeroModelProps) {
       mount.setPointerCapture(e.pointerId);
     };
 
-    const onPointerMove = (e: PointerEvent) => {
+    const onPointerMove = (e) => {
       if (!isDragging) return;
       const dx = e.clientX - prevX;
       const dy = e.clientY - prevY;
@@ -87,7 +80,6 @@ export default function HeroModel({ onReady }: HeroModelProps) {
       rotX += velX;
       rotY += velY;
 
-      // Clamp vertical so model never flips upside-down
       rotX = Math.max(-Math.PI / 3, Math.min(Math.PI / 3, rotX));
 
       prevX = e.clientX;
@@ -108,7 +100,7 @@ export default function HeroModel({ onReady }: HeroModelProps) {
 
     // ── Load model ──────────────────────────────────────────────────────
     const loader = new GLTFLoader();
-    let model: THREE.Group | null = null;
+    let model = null;
 
     loader.load(
       "/models/scene.glb",
@@ -134,15 +126,14 @@ export default function HeroModel({ onReady }: HeroModelProps) {
     window.addEventListener("resize", onResize);
 
     // ── Render loop ─────────────────────────────────────────────────────
-    let raf: number;
-    const damping = 0.88; // momentum decay — 0 = instant stop, 1 = never stops
+    let raf;
+    const damping = 0.88;
 
     const animate = () => {
       raf = requestAnimationFrame(animate);
 
       if (model) {
         if (!isDragging) {
-          // Decay velocity (momentum / throw feel)
           velX *= damping;
           velY *= damping;
           rotX += velX;
@@ -150,7 +141,6 @@ export default function HeroModel({ onReady }: HeroModelProps) {
 
           rotX = Math.max(-Math.PI / 3, Math.min(Math.PI / 3, rotX));
 
-          // Once momentum settles, fade auto-spin back in
           if (Math.abs(velY) < 0.0002) {
             autoSpin = THREE.MathUtils.lerp(autoSpin, 0.004, 0.02);
             rotY += autoSpin;
