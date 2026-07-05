@@ -26,7 +26,7 @@ const fadeIn = {
   },
 };
 
-export default function HeroSection() {
+export default function HeroSection({ id }) {
   const sceneRef = useRef(null);
 
   const handleSceneReady = useCallback(() => {
@@ -41,11 +41,14 @@ export default function HeroSection() {
 
   return (
     <section
+      id={id}
+      
       style={{
         position: "relative",
         minHeight: "100svh",
         background: "#080809",
         overflow: "hidden",
+      
       }}
     >
       <style>{`
@@ -206,12 +209,10 @@ export default function HeroSection() {
           transition={{ delay: 0.45 }}
           style={{ display: "flex", alignItems: "center", gap: "2.2rem", flexWrap: "wrap" }}
         >
-          <button type="button" className="hero-cta-primary">
-            Explore Skysense
-          </button>
-          <button type="button" className="hero-cta-ghost">
+
+          <a type="button" className="hero-cta-ghost" href="#gallery">
             See it in action&nbsp;→
-          </button>
+          </a>
         </motion.div>
 
         {/* Scroll indicator */}

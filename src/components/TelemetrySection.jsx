@@ -33,7 +33,7 @@ export default function TelemetrySection() {
         .tele-section { background: #0a0f1e; padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 6vw, 6rem); }
         .tele-label { font-family: var(--font-dm-mono, monospace); font-size: 11px; letter-spacing: 0.24em; color: rgba(255,255,255,0.25); text-transform: uppercase; margin-bottom: 16px; }
         .tele-heading { font-family: var(--font-bebas-neue, sans-serif); font-size: clamp(2.4rem, 5vw, 4rem); color: #fff; line-height: 1.05; margin-bottom: 48px; }
-        .tele-heading em { color: #c6f135; font-style: normal; }
+        .tele-heading em { color: #3b5bdb; font-style: normal; }
         .tele-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: rgba(255,255,255,0.05); margin-bottom: 24px; }
         .tele-cell { background: #0a0f1e; padding: 28px 26px; position: relative; overflow: hidden; }
         .tele-cell::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--cell-color); }
@@ -45,7 +45,7 @@ export default function TelemetrySection() {
         .tele-bar-wrap { margin-top: 16px; height: 2px; background: rgba(255,255,255,0.06); position: relative; overflow: hidden; }
         .tele-bar { position: absolute; top: 0; left: 0; height: 100%; transition: width 0.8s ease; }
         .tele-note { font-family: var(--font-dm-mono, monospace); font-size: 10px; letter-spacing: 0.14em; color: rgba(255,255,255,0.15); text-transform: uppercase; text-align: center; }
-        .tele-note em { color: #c6f135; font-style: normal; animation: blink 1.6s step-end infinite; }
+        .tele-note em { color: #3b5bdb; font-style: normal; animation: blink 1.6s step-end infinite; }
         @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
         @media (max-width: 860px) { .tele-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 520px) { .tele-grid { grid-template-columns: 1fr; } }

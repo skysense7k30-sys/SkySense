@@ -20,7 +20,7 @@ const OBJECTIVES = [
   "Mission Planner integration for waypoint missions",
 ];
 
-export default function ProblemSection() {
+export default function ProblemSection({ id }) {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -40,26 +40,26 @@ export default function ProblemSection() {
         .prb2-label { font-family: var(--font-dm-mono, monospace); font-size: 11px; letter-spacing: 0.24em; color: rgba(255,255,255,0.25); text-transform: uppercase; margin-bottom: 40px; }
         .prb2-stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(255,255,255,0.06); margin-bottom: 64px; }
         .prb2-stat { background: #06060a; padding: 28px 24px; border-top: 2px solid transparent; transition: border-color 0.3s; }
-        .prb2-stat:hover { border-top-color: #c6f135; }
-        .prb2-stat .val { font-family: var(--font-bebas-neue, sans-serif); font-size: clamp(2.2rem, 4vw, 3.5rem); color: #c6f135; line-height: 1; display: block; margin-bottom: 6px; }
+        .prb2-stat:hover { border-top-color: #3b5bdb; }
+        .prb2-stat .val { font-family: var(--font-bebas-neue, sans-serif); font-size: clamp(2.2rem, 4vw, 3.5rem); color: #3b5bdb; line-height: 1; display: block; margin-bottom: 6px; }
         .prb2-stat .desc { font-family: var(--font-dm-mono, monospace); font-size: 10.5px; letter-spacing: 0.14em; color: rgba(255,255,255,0.3); text-transform: uppercase; }
         .prb2-body { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(2rem, 5vw, 5rem); align-items: start; }
         .prb2-h2 { font-family: var(--font-bebas-neue, sans-serif); font-size: clamp(2.4rem, 4.5vw, 4rem); line-height: 1.05; color: #fff; margin-bottom: 20px; }
         .prb2-h2 em { color: rgba(255,255,255,0.22); font-style: normal; }
         .prb2-p { font-family: var(--font-space-grotesk, sans-serif); font-size: 0.95rem; line-height: 1.85; color: rgba(255,255,255,0.4); }
         .prb2-p + .prb2-p { margin-top: 14px; }
-        .prb2-card { background: #0e0e18; border: 1px solid rgba(198,241,53,0.12); padding: 32px; position: relative; overflow: hidden; }
-        .prb2-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #c6f135, #7b6cff); }
-        .prb2-card-label { font-family: var(--font-dm-mono, monospace); font-size: 10px; letter-spacing: 0.2em; color: #c6f135; text-transform: uppercase; margin-bottom: 16px; }
+        .prb2-card { background: #0e0e18; border: 1px solid rgba(59,91,219,0.12); padding: 32px; position: relative; overflow: hidden; }
+        .prb2-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #3b5bdb, #1e3a8a); }
+        .prb2-card-label { font-family: var(--font-dm-mono, monospace); font-size: 10px; letter-spacing: 0.2em; color: #3b5bdb; text-transform: uppercase; margin-bottom: 16px; }
         .prb2-card h3 { font-family: var(--font-bebas-neue, sans-serif); font-size: 2rem; color: #fff; letter-spacing: 0.03em; margin-bottom: 14px; }
         .prb2-card p { font-family: var(--font-space-grotesk, sans-serif); font-size: 0.9rem; line-height: 1.75; color: rgba(255,255,255,0.45); }
         .prb2-objectives { margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; flex-direction: column; gap: 10px; }
         .prb2-obj-item { display: flex; gap: 10px; align-items: flex-start; }
-        .prb2-obj-bullet { color: #c6f135; font-family: var(--font-dm-mono, monospace); font-size: 12px; flex-shrink: 0; margin-top: 2px; }
+        .prb2-obj-bullet { color: #3b5bdb; font-family: var(--font-dm-mono, monospace); font-size: 12px; flex-shrink: 0; margin-top: 2px; }
         .prb2-obj-text { font-family: var(--font-dm-mono, monospace); font-size: 10px; letter-spacing: 0.08em; line-height: 1.6; color: rgba(255,255,255,0.35); text-transform: uppercase; }
         @media (max-width: 860px) { .prb2-stats-row { grid-template-columns: repeat(2, 1fr); } .prb2-body { grid-template-columns: 1fr; } }
       `}</style>
-      <section className="prb2-section" ref={ref}>
+      <section className="prb2-section" ref={ref} id={id}>
         <div className="prb2-label">Problem &amp; Motivation</div>
         <div className="prb2-stats-row">
           {STATS.map((s) => (

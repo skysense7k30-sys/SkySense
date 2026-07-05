@@ -8,7 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 const TABS = {
   esp32: {
     label: "ESP32-CAM Firmware",
-    color: "#ff6b35",
+    color: "#3b5bdb",
     summary: "Initializes OV2640 camera, connects to Wi-Fi, and hosts an MJPEG HTTP streaming server on port 80. Live feed accessible via browser at http://ESP32-IP/ or http://ESP32-IP/stream.",
     libraries: ["esp_camera.h", "WiFi.h", "esp_http_server.h"],
     keyFunctions: [
@@ -21,7 +21,7 @@ const TABS = {
   },
   arduino: {
     label: "Arduino UNO Firmware",
-    color: "#00d4aa",
+    color: "#5b7fff",
     summary: "Reads temperature and humidity from DHT11 sensor every 2 seconds and transmits data over Serial to HC-05 Bluetooth module at 9600 baud for wireless ground-station monitoring.",
     libraries: ["DHT.h"],
     keyFunctions: [
@@ -32,7 +32,7 @@ const TABS = {
   },
 };
 
-export default function SoftwareSection() {
+export default function SoftwareSection({id}) {
   const ref = useRef(null);
   const [activeTab, setActiveTab] = useState("esp32");
 
@@ -53,7 +53,7 @@ export default function SoftwareSection() {
         .sw-section { background: #0a0f1e; padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 6vw, 6rem); }
         .sw-label { font-family: var(--font-dm-mono, monospace); font-size: 11px; letter-spacing: 0.24em; color: rgba(255,255,255,0.25); text-transform: uppercase; margin-bottom: 16px; }
         .sw-heading { font-family: var(--font-bebas-neue, sans-serif); font-size: clamp(2.4rem, 5vw, 4rem); color: #fff; line-height: 1.05; margin-bottom: 36px; }
-        .sw-heading em { color: #00d4aa; font-style: normal; }
+        .sw-heading em { color: #3b5bdb; font-style: normal; }
         .sw-tabs { display: flex; gap: 2px; margin-bottom: 32px; }
         .sw-tab { font-family: var(--font-dm-mono, monospace); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; padding: 10px 20px; border: 1px solid rgba(255,255,255,0.08); background: transparent; color: rgba(255,255,255,0.3); cursor: pointer; transition: all 0.2s; }
         .sw-tab.active { color: #06060a; background: var(--tab-color); border-color: var(--tab-color); }
@@ -65,7 +65,7 @@ export default function SoftwareSection() {
         .sw-lib { font-family: var(--font-dm-mono, monospace); font-size: 10px; letter-spacing: 0.12em; padding: 5px 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
         .sw-output-box { background: #060810; border: 1px solid rgba(255,255,255,0.06); padding: 16px 18px; margin-top: 16px; }
         .sw-output-label { font-family: var(--font-dm-mono, monospace); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.2); margin-bottom: 8px; }
-        .sw-output-text { font-family: var(--font-dm-mono, monospace); font-size: 11.5px; letter-spacing: 0.06em; color: #c6f135; }
+        .sw-output-text { font-family: var(--font-dm-mono, monospace); font-size: 11.5px; letter-spacing: 0.06em; color: #3b5bdb; }
         .sw-fn-list { display: flex; flex-direction: column; gap: 0; }
         .sw-fn-item { padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .sw-fn-item:last-child { border-bottom: none; }
@@ -73,7 +73,7 @@ export default function SoftwareSection() {
         .sw-fn-desc { font-family: var(--font-space-grotesk, sans-serif); font-size: 0.84rem; line-height: 1.65; color: rgba(255,255,255,0.35); }
         @media (max-width: 800px) { .sw-panel { grid-template-columns: 1fr; } }
       `}</style>
-      <section className="sw-section" ref={ref}>
+      <section className="sw-section" ref={ref} id={id}>
         <div className="sw-label">Software Implementation</div>
         <h2 className="sw-heading">Modular firmware,<br /><em>stable by design.</em></h2>
         <div className="sw-tabs">
