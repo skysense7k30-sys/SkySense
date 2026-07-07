@@ -9,21 +9,36 @@ const HeroModel = dynamic(() => import("./HeroModel"), {
   loading: () => null,
 });
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
+// Structural animations matching the industrial dashboard theme
+const panelSlideIn = {
+  hidden: { opacity: 0, x: -40 },
   show: {
     opacity: 1,
-    y: 0,
-    transition: { duration: 1.8, ease: [0.16, 1, 0.3, 1] },
+    x: 0,
+    transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1] },
   },
 };
 
-const fadeIn = {
+const viewPortReveal = {
+  hidden: { opacity: 0, scale: 0.98 },
+  show: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 1.6, ease: [0.16, 1, 0.3, 1], delay: 0.2 },
+  },
+};
+
+const telemetryFade = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
-    transition: { duration: 1.6, ease: "easeOut" },
+    transition: { staggerChildren: 0.1, delayChildren: 0.6 },
   },
+};
+
+const telemetryItem = {
+  hidden: { opacity: 0, y: 10 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
 };
 
 function getTimeLeft(target) {
@@ -42,27 +57,17 @@ function pad(n) {
   return String(n).padStart(2, "0");
 }
 
-// One rolling digit — old value slides up/fades out, new value slides in from below.
-function Digit({ value }) {
+// Rapid flash animation for numbers when they change
+function DashboardDigit({ value }) {
   return (
-    <span
-      style={{
-        position: "relative",
-        display: "inline-block",
-        width: "0.62em",
-        height: "1em",
-        overflow: "hidden",
-        verticalAlign: "top",
-      }}
-    >
-      <AnimatePresence mode="popLayout">
+    <span style={{ position: "relative", display: "inline-block" }}>
+      <AnimatePresence mode="wait">
         <motion.span
           key={value}
-          initial={{ y: "0.7em", opacity: 0 }}
-          animate={{ y: "0em", opacity: 1 }}
-          exit={{ y: "-0.7em", opacity: 0 }}
-          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-          style={{ position: "absolute", left: 0, right: 0 }}
+          initial={{ opacity: 0.3, filter: "blur(4px)" }}
+          animate={{ opacity: 1, filter: "blur(0px)" }}
+          exit={{ opacity: 0.3, filter: "blur(2px)" }}
+          transition={{ duration: 0.25, ease: "easeOut" }}
         >
           {value}
         </motion.span>
@@ -71,46 +76,44 @@ function Digit({ value }) {
   );
 }
 
-function Segment({ value, label }) {
+function DashboardSegment({ value, label }) {
   const str = pad(value);
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.6rem" }}>
-      <div
-        style={{
-          fontFamily: "'Instrument Sans', sans-serif",
-          fontSize: "clamp(3.2rem, 8vw, 8rem)",
-          fontWeight: 700,
-          letterSpacing: "-0.03em",
-          lineHeight: 1,
-          color: "rgba(255,255,255,0.96)",
-          display: "flex",
-        }}
-      >
-        {str.split("").map((ch, i) => (
-          <Digit key={i} value={ch} />
-        ))}
-      </div>
+    <div style={{ display: "flex", flexDirection: "column", gap: "0.2rem" }}>
       <span
         style={{
           fontFamily: "'Instrument Sans', sans-serif",
           fontSize: "10px",
-          letterSpacing: "0.2em",
+          letterSpacing: "0.15em",
           textTransform: "uppercase",
-          color: "rgba(255,255,255,0.28)",
+          color: "rgba(255,255,255,0.35)",
         }}
       >
         {label}
       </span>
+      <div
+        style={{
+          fontFamily: "'Instrument Sans', sans-serif",
+          fontSize: "clamp(2.5rem, 6vw, 5.5rem)",
+          fontWeight: 600,
+          letterSpacing: "-0.02em",
+          lineHeight: 0.95,
+          color: "#ffffff",
+          display: "flex",
+          gap: "2px",
+        }}
+      >
+        {str.split("").map((ch, i) => (
+          <DashboardDigit key={i} value={ch} />
+        ))}
+      </div>
     </div>
   );
 }
 
-export default function TimerSection({ id, targetDate = "2026-09-01T09:00:00" }) {
+export default function TimerSection({ id, targetDate = "2026-07-16T18:00:00" }) {
   const sceneRef = useRef(null);
   const target = useRef(new Date(targetDate));
-  // Start as null on both server and first client render so the two match
-  // exactly. The real, time-dependent value is only ever computed on the
-  // client, inside useEffect, after hydration has already completed.
   const [time, setTime] = useState(null);
 
   const handleSceneReady = useCallback(() => {
@@ -139,119 +142,186 @@ export default function TimerSection({ id, targetDate = "2026-09-01T09:00:00" })
       style={{
         position: "relative",
         minHeight: "100svh",
-        background: "#080809",
+        background: "#060913",
         overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        padding: "clamp(1.5rem, 4vw, 3rem)",
+        boxSizing: "border-box",
       }}
     >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 
-        .scene-layer {
+        .scene-container {
           opacity: 0;
-          transition: opacity 2.4s ease-out 0.4s;
+          transform: scale(0.96);
+          transition: opacity 2s ease-out 0.2s, transform 2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
         }
-        .scene-layer[data-visible="true"] {
+        .scene-container[data-visible="true"] {
           opacity: 1;
+          transform: scale(1);
         }
       `}</style>
 
-      {/* ── 3D scene — full bleed, same drone model as hero ───────────────── */}
+      {/* ── HEADER TELEMETRY STRIP ──────────────────────────────────────── */}
       <div
-        ref={sceneRef}
-        className="scene-layer"
-        aria-hidden
         style={{
-          position: "absolute",
-          inset: 0,
-          zIndex: 1,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          borderBottom: "1px solid rgba(255,255,255,0.07)",
+          paddingBottom: "1.5rem",
+          zIndex: 10,
+          fontFamily: "'Instrument Sans', sans-serif",
         }}
       >
-        <HeroModel onReady={handleSceneReady} />
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          <div
+            style={{
+              width: "6px",
+              height: "6px",
+              borderRadius: "50%",
+              background: display.done ? "#10b981" : "#f59e0b",
+              boxShadow: display.done ? "0 0 12px #10b981" : "0 0 12px #f59e0b",
+            }}
+          />
+          <div style={{ fontSize: "11px", letterSpacing: "0.2em", textTransform: "uppercase", color: "#fff" }}>
+            {display.done ? "System: Operational" : "System: Countdown Mode"}
+          </div>
+        </div>
+        <div style={{ fontSize: "11px", letterSpacing: "0.15em", color: "rgba(255,255,255,0.4)", textAlign: "right" }}>
+          SYS.LOC // 001-A
+        </div>
       </div>
 
-      {/* ── Vignettes — darken the scene so bold timer stays readable ─────── */}
-      <div aria-hidden style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 120% 100% at 50% 50%, rgba(8,8,9,0.25) 30%, rgba(8,8,9,0.7) 100%)", pointerEvents: "none", zIndex: 2 }} />
-      <div aria-hidden style={{ position: "absolute", top: 0, left: 0, right: 0, height: "18%", background: "linear-gradient(to bottom, #080809 0%, transparent 100%)", pointerEvents: "none", zIndex: 2 }} />
-      <div aria-hidden style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "20%", background: "linear-gradient(to top, rgba(8,8,9,0.8) 0%, transparent 100%)", pointerEvents: "none", zIndex: 2 }} />
-
-      {/* ── Eyebrow label ──────────────────────────────────────────────────── */}
-      <motion.div
-        variants={fadeIn}
-        initial="hidden"
-        animate="show"
-        transition={{ delay: 0.3 }}
-        style={{
-          position: "absolute",
-          top: "clamp(2rem, 5vw, 3.5rem)",
-          left: 0,
-          right: 0,
-          zIndex: 4,
-          textAlign: "center",
-          fontFamily: "'Instrument Sans', sans-serif",
-          fontSize: "11px",
-          letterSpacing: "0.24em",
-          textTransform: "uppercase",
-          color: "rgba(255,255,255,0.28)",
-        }}
-      >
-        {display.done ? "Mission Live" : "Countdown to Launch"}
-      </motion.div>
-
-      {/* ── Centered bold timer, drone visible through/behind it ──────────── */}
+      {/* ── MAIN ASYMMETRIC CONTENT GRID ────────────────────────────────── */}
       <div
         style={{
-          position: "absolute",
-          inset: 0,
-          zIndex: 4,
-          display: "flex",
+          display: "grid",
+          gridTemplateColumns: "window.innerWidth < 960 ? '1fr' : '1.2fr 1fr'",
+          flexGrow: 1,
           alignItems: "center",
-          justifyContent: "center",
+          gap: "3rem",
+          margin: "2rem 0",
+          zIndex: 5,
         }}
+        className="main-layout-grid"
       >
+        <style>{`
+          .main-layout-grid {
+            grid-template-columns: 1.2fr 1fr;
+          }
+          @media (max-width: 960px) {
+            .main-layout-grid {
+              grid-template-columns: 1fr;
+            }
+            .model-viewport-wrapper {
+              height: 40svh !important;
+            }
+          }
+        `}</style>
+
+        {/* Left Column: Bold Industrial Counter & Caption */}
+        <motion.div variants={panelSlideIn} initial="hidden" animate="show" style={{ display: "flex", flexDirection: "column", gap: "2.5rem" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+            <span style={{ fontSize: "11px", letterSpacing: "0.3em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)" }}>
+              Projected Sequence
+            </span>
+            <h2 style={{ fontFamily: "'Instrument Sans', sans-serif", fontSize: "clamp(1.8rem, 4vw, 3.2rem)", fontWeight: 500, color: "#fff", margin: 0, letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+              {display.done ? "SkySense Active." : "Next Gen Flight Telemetry."}
+            </h2>
+          </div>
+
+          {/* Grid of counter blocks */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1rem", borderTop: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.07)", padding: "1.5rem 0" }}>
+            <DashboardSegment value={display.days} label="Days" />
+            <DashboardSegment value={display.hours} label="Hrs" />
+            <DashboardSegment value={display.minutes} label="Min" />
+            <DashboardSegment value={display.seconds} label="Sec" />
+          </div>
+
+          <p style={{ margin: 0, fontFamily: "'Instrument Sans', sans-serif", fontSize: "0.95rem", lineHeight: 1.6, color: "rgba(255,255,255,0.45)", maxWidth: "600px" }}>
+            {display.done
+              ? "The platform has fully synchronized. Real-time sensory fields, remote asset mapping, and spatial coordination tools are now live."
+              : "This website serves as the official landing page for our self-built drone project, showcasing its design, development journey, and core capabilities. Built entirely by our team, the drone reflects our passion for innovation, engineering, and problem-solving. Here, you'll find insights into the technologies we used, the challenges we overcame, and the features that make our drone unique. The website highlights our vision, technical achievements, and the dedication behind transforming an idea into a fully functional aerial system."}
+          </p>
+        </motion.div>
+
+        {/* Right Column: Framed Viewport for the 3D Model */}
         <motion.div
-          variants={fadeUp}
+          variants={viewPortReveal}
           initial="hidden"
           animate="show"
-          transition={{ delay: 0.4 }}
+          className="model-viewport-wrapper"
           style={{
-            display: "flex",
-            alignItems: "flex-start",
-            gap: "clamp(1.2rem, 3.5vw, 3rem)",
-            flexWrap: "wrap",
-            justifyContent: "center",
-            padding: "0 1.5rem",
+            position: "relative",
+            height: "55svh",
+            background: "linear-gradient(135deg, rgba(255,255,255,0.01) 0%, rgba(255,255,255,0.03) 100%)",
+            border: "1px solid rgba(255,255,255,0.08)",
+            borderRadius: "4px",
+            overflow: "hidden",
           }}
         >
-          <Segment value={display.days} label="Days" />
-          <Segment value={display.hours} label="Hours" />
-          <Segment value={display.minutes} label="Min" />
-          <Segment value={display.seconds} label="Sec" />
+          {/* Tech Reticles/Crosshairs Overlay */}
+          <div style={{ position: "absolute", top: "12px", left: "12px", width: "8px", height: "8px", borderTop: "1px solid rgba(255,255,255,0.3)", borderLeft: "1px solid rgba(255,255,255,0.3)", pointerEvents: "none", zIndex: 3 }} />
+          <div style={{ position: "absolute", top: "12px", right: "12px", width: "8px", height: "8px", borderTop: "1px solid rgba(255,255,255,0.3)", borderRight: "1px solid rgba(255,255,255,0.3)", pointerEvents: "none", zIndex: 3 }} />
+          <div style={{ position: "absolute", bottom: "12px", left: "12px", width: "8px", height: "8px", borderBottom: "1px solid rgba(255,255,255,0.3)", borderLeft: "1px solid rgba(255,255,255,0.3)", pointerEvents: "none", zIndex: 3 }} />
+          <div style={{ position: "absolute", bottom: "12px", right: "12px", width: "8px", height: "8px", borderBottom: "1px solid rgba(255,255,255,0.3)", borderRight: "1px solid rgba(255,255,255,0.3)", pointerEvents: "none", zIndex: 3 }} />
+          
+          <div style={{ position: "absolute", bottom: "12px", left: "30px", fontFamily: "'Instrument Sans', sans-serif", fontSize: "9px", color: "rgba(255,255,255,0.25)", letterSpacing: "0.1em", zIndex: 3, textTransform: "uppercase" }}>
+            M_MODEL // SCALE 1.0
+          </div>
+
+          <div
+            ref={sceneRef}
+            className="scene-container"
+            aria-hidden
+            style={{
+              position: "absolute",
+              inset: 0,
+              zIndex: 1,
+            }}
+          >
+            <HeroModel onReady={handleSceneReady} />
+          </div>
+          
+          {/* Subtle vignette localized purely inside the viewport framework */}
+          <div aria-hidden style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 50% 50%, transparent 20%, rgba(10,10,12,0.6) 100%)", pointerEvents: "none", zIndex: 2 }} />
         </motion.div>
       </div>
 
-      {/* ── Bottom caption ─────────────────────────────────────────────────── */}
-      <motion.p
-        variants={fadeIn}
+      {/* ── FOOTER DATA READOUTS ────────────────────────────────────────── */}
+      <motion.div
+        variants={telemetryFade}
         initial="hidden"
         animate="show"
-        transition={{ delay: 0.9 }}
         style={{
-          position: "absolute",
-          bottom: "clamp(2.5rem, 6vw, 4rem)",
-          left: 0,
-          right: 0,
-          zIndex: 4,
-          margin: 0,
-          textAlign: "center",
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "2rem row-gap: 1rem",
+          justifyContent: "space-between",
+          borderTop: "1px solid rgba(255,255,255,0.07)",
+          paddingTop: "1.5rem",
+          zIndex: 10,
           fontFamily: "'Instrument Sans', sans-serif",
-          fontSize: "clamp(0.8rem, 0.95vw, 0.9rem)",
-          color: "rgba(255,255,255,0.32)",
+          fontSize: "10px",
+          letterSpacing: "0.12em",
+          textTransform: "uppercase",
+          color: "rgba(255,255,255,0.35)",
         }}
       >
-        {display.done
-          ? "SkySense has taken flight."
-          : "Autonomous navigation, live sensing, and real-time video — counting down to first flight."}
-      </motion.p>
+        <motion.div variants={telemetryItem}>
+          Target Integration: <span style={{ color: "#fff", marginLeft: "4px" }}>16 JULY 18:00 HRS</span>
+        </motion.div>
+        <motion.div variants={telemetryItem}>
+          Staged Array: <span style={{ color: "#fff", marginLeft: "4px" }}>04/04 MODULES READY</span>
+        </motion.div>
+        <motion.div variants={telemetryItem} style={{ color: "rgba(255,255,255,0.2)" }}>
+          ©2026 SKYSENSE INC.
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

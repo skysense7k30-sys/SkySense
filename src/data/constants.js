@@ -5,7 +5,7 @@ export const TEAM = [
   { name: "Aditya Padhi", reg: "2241016007",team:"drone" },
   { name: "Chinmoy Patra", reg: "2241016265",team:"drone" },
   { name: "Abhijeet Bej", reg: "2241002129",team:"drone" },
-  { name: "Noble Paul", reg: "21516516",team:"web" },
+  { name: "Noble Paul (Github - @noblepaul995)", reg: "21516516",team:"web" },
 ];
 
 export const SUBSYSTEMS = [

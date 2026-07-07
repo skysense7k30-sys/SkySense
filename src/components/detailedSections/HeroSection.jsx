@@ -147,19 +147,19 @@ export default function HeroSection({ id }) {
         transition={{ delay: 0.6 }}
         style={{
           position: "absolute",
-          top: "clamp(2rem, 5vw, 3.5rem)",
-          left: "clamp(1.5rem, 5vw, 5rem)",
+          top: "clamp(1rem, 2vw, 3.5rem)",
+          left: "clamp(1.5rem, 2vw, 5rem)",
           zIndex: 4,
-          width: "clamp(110px, 12vw, 160px)",
+          width: "clamp(285px, 12vw, 160px)",
           
         }}
       >
-        <Image
+        <img
           src="/logo/skysense-logo.png"
           alt="SkySense"
-          width={780}
+          width={600}
           height={520}
-          priority
+          
           style={{ width: "100%", height: "auto", display: "block", }}
         />
       </motion.div>
