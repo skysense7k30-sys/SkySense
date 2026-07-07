@@ -14,6 +14,7 @@ import Footer from "@/components/FooterSection";
 import FutureEnhancementsSection from "./FutureEnhancementsSection";
 import BuildForFieldSection from "./BuildForFieldSection";
 import TeamCredits from "./TeamSection";
+import ContactSection from "./ContactSection";
 
 export default function SkysensePage() {
   return (
@@ -46,6 +47,7 @@ export default function SkysensePage() {
       <BuildForFieldSection />
       <FutureEnhancementsSection />
       <TeamCredits id="team" />
+      <ContactSection id="contact" />
       <Footer />
     </>
   );

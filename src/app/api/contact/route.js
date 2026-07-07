@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import clientPromise from "@/lib/mongoDb";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -64,6 +65,20 @@ export async function POST(request) {
       );
     }
 
+    const client = await clientPromise;
+    const db = client.db(process.env.MONGODB_DB || "skysense");
+
+    const doc = {
+      name,
+      email,
+      message,
+      ip,
+      createdAt: new Date(),
+      emailSent: false,
+    };
+
+    const insertResult = await db.collection("contactMessages").insertOne(doc);
+
     const { error } = await resend.emails.send({
       from: process.env.CONTACT_FROM || "Skysense Contact <onboarding@resend.dev>",
       to: process.env.CONTACT_INBOX,
@@ -78,11 +93,14 @@ export async function POST(request) {
     });
 
     if (error) {
-      console.error("Resend error:", error);
-      return NextResponse.json(
-        { error: "Something went wrong sending your message. Please try again." },
-        { status: 502 }
-      );
+      // Message is already saved in Mongo, so this isn't fatal — just log it
+      // so you can notice the email side is broken (e.g. bad API key, domain
+      // not verified) without losing the submission itself.
+      console.error("Resend error (message still saved to DB):", error);
+    } else {
+      await db
+        .collection("contactMessages")
+        .updateOne({ _id: insertResult.insertedId }, { $set: { emailSent: true } });
     }
 
     return NextResponse.json({ success: true }, { status: 200 });
