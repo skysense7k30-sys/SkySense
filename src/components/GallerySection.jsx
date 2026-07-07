@@ -204,11 +204,18 @@ export default function GallerySection() {
         </h2>
 
         <div className="gallery-video-frame">
-          <iframe
-            src="https://drive.google.com/file/d/1ZVnUdnerkqX_SofaLidiZ_UQfh7_lb8N/preview?autoplay=1"
-            allow="autoplay; fullscreen"
-            loading="lazy"
-          />
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-auto"
+          >
+            <source
+              src="https://res.cloudinary.com/nkbnbi5p/video/upload/v1783433775/output_anqbos.mp4"
+              type="video/mp4"
+            />
+          </video>
 
           <div className="gallery-video-fade" />
 

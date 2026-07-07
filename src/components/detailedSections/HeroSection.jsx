@@ -2,6 +2,7 @@
 
 import { useRef, useCallback } from "react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { motion } from "framer-motion";
 
 const HeroModel = dynamic(() => import("./HeroModel"), {
@@ -138,6 +139,31 @@ export default function HeroSection({ id }) {
       <div aria-hidden style={{ position:"absolute", top:0, left:0, right:0, height:"18%", background:"linear-gradient(to bottom, #080809 0%, transparent 100%)", pointerEvents:"none", zIndex:2 }} />
       <div aria-hidden style={{ position:"absolute", bottom:0, left:0, right:0, height:"20%", background:"linear-gradient(to top, rgba(8,8,9,0.8) 0%, transparent 100%)", pointerEvents:"none", zIndex:2 }} />
 
+      {/* ── Top-left: logo mark ───────────────────────────────────────────── */}
+      <motion.div
+        variants={fadeIn}
+        initial="hidden"
+        animate="show"
+        transition={{ delay: 0.6 }}
+        style={{
+          position: "absolute",
+          top: "clamp(2rem, 5vw, 3.5rem)",
+          left: "clamp(1.5rem, 5vw, 5rem)",
+          zIndex: 4,
+          width: "clamp(110px, 12vw, 160px)",
+          
+        }}
+      >
+        <Image
+          src="/logo/skysense-logo.png"
+          alt="SkySense"
+          width={780}
+          height={520}
+          priority
+          style={{ width: "100%", height: "auto", display: "block", }}
+        />
+      </motion.div>
+
       {/* ── Top-right: subheading ─────────────────────────────────────────── */}
       <motion.p
         variants={fadeIn}
@@ -192,13 +218,13 @@ export default function HeroSection({ id }) {
             color: "rgba(255,255,255,0.93)",
           }}
         >
-          Skies that
+          SkySense   
           <br />
           <em style={{ fontStyle: "italic", fontWeight: 400, color: "rgba(255,255,255,0.22)" }}>
-            sense
+           Born Above
           </em>
           <br />
-          everything.
+          Built Beyond.
         </motion.h1>
 
         {/* CTAs */}
