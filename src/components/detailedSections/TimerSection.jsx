@@ -160,10 +160,70 @@ function InfiniteMarquee({ text = "SKYSENSE", repeat = 8 }) {
   );
 }
 
+// Replace with your actual Cloudinary-hosted audio URL, e.g.
+// "https://res.cloudinary.com/<cloud_name>/video/upload/v.../ambient-track.mp3"
+// (Cloudinary serves audio files under the "video" resource type.)
+const BG_MUSIC_URL =
+  "https://res.cloudinary.com/nkbnbi5p/video/upload/v1783496436/Aerial_torque_2_qsvzks.mp3";
+
+// One-shot flash-then-reveal animation shown the instant the countdown
+// hits zero: a quick white flash, followed by "Welcome to SkySense"
+// scaling/fading in over a dark overlay, then the whole thing dissolves.
+function WelcomeFlash() {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: [0, 1, 1, 0] }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 2.4, times: [0, 0.05, 0.85, 1], ease: "easeInOut" }}
+      style={{
+        position: "absolute",
+        inset: 0,
+        zIndex: 50,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "#060913",
+        pointerEvents: "none",
+      }}
+    >
+      {/* Sharp white flash on entry */}
+      <motion.div
+        initial={{ opacity: 1 }}
+        animate={{ opacity: 0 }}
+        transition={{ duration: 0.45, ease: "easeOut" }}
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: "#ffffff",
+        }}
+      />
+      <motion.h1
+        initial={{ opacity: 0, scale: 0.85, letterSpacing: "0.05em" }}
+        animate={{ opacity: 1, scale: 1, letterSpacing: "-0.02em" }}
+        transition={{ delay: 0.4, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        style={{
+          fontFamily: "'Instrument Sans', sans-serif",
+          fontWeight: 600,
+          fontSize: "clamp(2rem, 6vw, 4.5rem)",
+          color: "#ffffff",
+          margin: 0,
+          textAlign: "center",
+          padding: "0 1rem",
+        }}
+      >
+        Welcome to SkySense
+      </motion.h1>
+    </motion.div>
+  );
+}
+
 export default function TimerSection({ id, targetDate = "2026-07-16T18:00:00" }) {
   const sceneRef = useRef(null);
+  const audioRef = useRef(null);
   const target = useRef(new Date(targetDate));
   const [time, setTime] = useState(null);
+  const [muted, setMuted] = useState(false);
 
   const handleSceneReady = useCallback(() => {
     const el = sceneRef.current;
@@ -183,7 +243,60 @@ export default function TimerSection({ id, targetDate = "2026-07-16T18:00:00" })
     return () => clearInterval(interval);
   }, []);
 
+  // Every major browser blocks sound-on autoplay until the user has
+  // interacted with the page. Start muted + looping immediately, then
+  // unmute either via the toggle button or on the visitor's first
+  // click/keypress anywhere on the page.
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    audio.volume = 1;
+    audio.loop = true;
+
+    const tryPlay = () => audio.play().catch(() => {});
+    tryPlay();
+
+    const unlockOnGesture = () => {
+      tryPlay();
+      window.removeEventListener("pointerdown", unlockOnGesture);
+      window.removeEventListener("keydown", unlockOnGesture);
+    };
+    window.addEventListener("pointerdown", unlockOnGesture);
+    window.addEventListener("keydown", unlockOnGesture);
+
+    return () => {
+      window.removeEventListener("pointerdown", unlockOnGesture);
+      window.removeEventListener("keydown", unlockOnGesture);
+    };
+  }, []);
+
+  const toggleMute = useCallback(() => {
+    setMuted((prev) => {
+      const next = !prev;
+      const audio = audioRef.current;
+      if (audio) {
+        audio.muted = next;
+        if (!next) audio.play().catch(() => {});
+      }
+      return next;
+    });
+  }, []);
+
   const display = time ?? { days: 0, hours: 0, minutes: 0, seconds: 0, done: false };
+
+  // Fire the welcome flash exactly once, the moment the countdown hits zero.
+  const [showWelcomeFlash, setShowWelcomeFlash] = useState(false);
+  const hasFlashedRef = useRef(false);
+
+  useEffect(() => {
+    if (display.done && !hasFlashedRef.current) {
+      hasFlashedRef.current = true;
+      setShowWelcomeFlash(true);
+      const timer = setTimeout(() => setShowWelcomeFlash(false), 2400);
+      return () => clearTimeout(timer);
+    }
+  }, [display.done]);
 
   return (
     <section
@@ -215,6 +328,13 @@ export default function TimerSection({ id, targetDate = "2026-07-16T18:00:00" })
         }
       `}</style>
 
+      {/* Looping Cloudinary background audio (see BG_MUSIC_URL above) */}
+      <audio ref={audioRef} src={BG_MUSIC_URL} loop muted={muted} preload="auto" />
+
+      {/* One-time "Welcome to SkySense" flash, shown when countdown hits 0 */}
+      <AnimatePresence>{showWelcomeFlash && <WelcomeFlash key="welcome-flash" />}</AnimatePresence>
+
+
       {/* ── HEADER TELEMETRY STRIP ──────────────────────────────────────── */}
       <div
         style={{
@@ -241,7 +361,27 @@ export default function TimerSection({ id, targetDate = "2026-07-16T18:00:00" })
             {display.done ? "System: Operational" : "System: Countdown Mode"}
           </div>
         </div>
-        
+
+        <button
+          type="button"
+          onClick={toggleMute}
+          style={{
+            background: "transparent",
+            border: "1px solid rgba(255,255,255,0.15)",
+            borderRadius: "3px",
+            color: "rgba(255,255,255,0.6)",
+            fontFamily: "'Instrument Sans', sans-serif",
+            fontSize: "10px",
+            letterSpacing: "0.15em",
+            textTransform: "uppercase",
+            padding: "0.4rem 0.75rem",
+            cursor: "pointer",
+          }}
+          aria-pressed={!muted}
+          aria-label={muted ? "Unmute background audio" : "Mute background audio"}
+        >
+          {muted ? "🔇 Audio Off" : "🔊 Audio On"}
+        </button>
       </div>
 
       {/* ── MAIN ASYMMETRIC CONTENT GRID ────────────────────────────────── */}
