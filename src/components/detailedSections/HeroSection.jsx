@@ -2,6 +2,7 @@
 
 import { useRef, useCallback } from "react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { motion } from "framer-motion";
 
 const HeroModel = dynamic(() => import("./HeroModel"), {
@@ -26,7 +27,7 @@ const fadeIn = {
   },
 };
 
-export default function HeroSection() {
+export default function HeroSection({ id }) {
   const sceneRef = useRef(null);
 
   const handleSceneReady = useCallback(() => {
@@ -41,11 +42,14 @@ export default function HeroSection() {
 
   return (
     <section
+      id={id}
+      
       style={{
         position: "relative",
         minHeight: "100svh",
         background: "#080809",
         overflow: "hidden",
+      
       }}
     >
       <style>{`
@@ -135,6 +139,31 @@ export default function HeroSection() {
       <div aria-hidden style={{ position:"absolute", top:0, left:0, right:0, height:"18%", background:"linear-gradient(to bottom, #080809 0%, transparent 100%)", pointerEvents:"none", zIndex:2 }} />
       <div aria-hidden style={{ position:"absolute", bottom:0, left:0, right:0, height:"20%", background:"linear-gradient(to top, rgba(8,8,9,0.8) 0%, transparent 100%)", pointerEvents:"none", zIndex:2 }} />
 
+      {/* ── Top-left: logo mark ───────────────────────────────────────────── */}
+      <motion.div
+        variants={fadeIn}
+        initial="hidden"
+        animate="show"
+        transition={{ delay: 0.6 }}
+        style={{
+          position: "absolute",
+          top: "clamp(1rem, 2vw, 3.5rem)",
+          left: "clamp(1.5rem, 2vw, 5rem)",
+          zIndex: 4,
+          width: "clamp(285px, 12vw, 160px)",
+          
+        }}
+      >
+        <img
+          src="/logo/skysense-logo.png"
+          alt="SkySense"
+          width={600}
+          height={520}
+          
+          style={{ width: "100%", height: "auto", display: "block", }}
+        />
+      </motion.div>
+
       {/* ── Top-right: subheading ─────────────────────────────────────────── */}
       <motion.p
         variants={fadeIn}
@@ -189,13 +218,13 @@ export default function HeroSection() {
             color: "rgba(255,255,255,0.93)",
           }}
         >
-          Skies that
+          SkySense   
           <br />
           <em style={{ fontStyle: "italic", fontWeight: 400, color: "rgba(255,255,255,0.22)" }}>
-            sense
+           Born Above
           </em>
           <br />
-          everything.
+          Built Beyond.
         </motion.h1>
 
         {/* CTAs */}
@@ -206,12 +235,10 @@ export default function HeroSection() {
           transition={{ delay: 0.45 }}
           style={{ display: "flex", alignItems: "center", gap: "2.2rem", flexWrap: "wrap" }}
         >
-          <button type="button" className="hero-cta-primary">
-            Explore Skysense
-          </button>
-          <button type="button" className="hero-cta-ghost">
+
+          <a type="button" className="hero-cta-ghost" href="#gallery">
             See it in action&nbsp;→
-          </button>
+          </a>
         </motion.div>
 
         {/* Scroll indicator */}

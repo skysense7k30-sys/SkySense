@@ -32,7 +32,7 @@ export default function CommsSection() {
         .comms-section { background: #0a0f1e; padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 6vw, 6rem); }
         .comms-label { font-family: var(--font-dm-mono, monospace); font-size: 11px; letter-spacing: 0.24em; color: rgba(255,255,255,0.25); text-transform: uppercase; margin-bottom: 16px; }
         .comms-heading { font-family: var(--font-bebas-neue, sans-serif); font-size: clamp(2.4rem, 5vw, 4rem); color: #fff; line-height: 1.05; margin-bottom: 48px; }
-        .comms-heading em { color: #ff6b35; font-style: normal; }
+        .comms-heading em { color: #3b5bdb; font-style: normal; }
         .comms-table { display: flex; flex-direction: column; gap: 1px; }
         .comms-header { display: grid; grid-template-columns: 90px 1fr 100px 160px; gap: 16px; padding: 0 0 12px; font-family: var(--font-dm-mono, monospace); font-size: 9.5px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.2); }
         .comms-row { display: grid; grid-template-columns: 90px 1fr 100px 160px; gap: 16px; align-items: center; padding: 20px 0; border-top: 1px solid rgba(255,255,255,0.05); }

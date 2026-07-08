@@ -74,7 +74,7 @@ export default function GallerySection() {
         }
 
         .gallery-heading em {
-          color: #c6f135;
+          color: #3b5bdb;
           font-style: normal;
         }
 
@@ -85,7 +85,7 @@ export default function GallerySection() {
           background: #000;
           overflow: hidden;
           margin-bottom: 56px;
-          border: 1px solid rgba(198,241,53,0.12);
+          border: 1px solid rgba(59,91,219,0.12);
         }
 
         .gallery-video-frame iframe {
@@ -115,7 +115,7 @@ export default function GallerySection() {
           position: absolute;
           width: 22px;
           height: 22px;
-          border: 2px solid #c6f135;
+          border: 2px solid #3b5bdb;
           opacity: 0.55;
           z-index: 2;
           pointer-events: none;
@@ -172,7 +172,7 @@ export default function GallerySection() {
           width: 6px;
           height: 6px;
           border-radius: 50%;
-          background: #c6f135;
+          background: #3b5bdb;
           animation: gallery-pulse 1.6s ease-in-out infinite;
         }
 
@@ -191,6 +191,7 @@ export default function GallerySection() {
       <section
         className="gallery-section"
         ref={ref}
+        id = "gallery"
       >
         <div className="gallery-label">
           Project Gallery
@@ -203,11 +204,18 @@ export default function GallerySection() {
         </h2>
 
         <div className="gallery-video-frame">
-          <iframe
-            src="https://drive.google.com/file/d/1ZVnUdnerkqX_SofaLidiZ_UQfh7_lb8N/preview?autoplay=1"
-            allow="autoplay; fullscreen"
-            loading="lazy"
-          />
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-auto"
+          >
+            <source
+              src="https://res.cloudinary.com/nkbnbi5p/video/upload/v1783433775/output_anqbos.mp4"
+              type="video/mp4"
+            />
+          </video>
 
           <div className="gallery-video-fade" />
 

@@ -32,17 +32,17 @@ export default function TestingSection() {
         .test-section { background: #06060a; padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 6vw, 6rem); }
         .test-label { font-family: var(--font-dm-mono, monospace); font-size: 11px; letter-spacing: 0.24em; color: rgba(255,255,255,0.25); text-transform: uppercase; margin-bottom: 16px; }
         .test-heading { font-family: var(--font-bebas-neue, sans-serif); font-size: clamp(2.4rem, 5vw, 4rem); color: #fff; line-height: 1.05; margin-bottom: 48px; }
-        .test-heading em { color: #c6f135; font-style: normal; }
+        .test-heading em { color: #3b5bdb; font-style: normal; }
         .test-results-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; background: rgba(255,255,255,0.05); margin-bottom: 48px; }
         .test-result-card { background: #06060a; padding: 26px 22px; border-top: 2px solid transparent; transition: border-color 0.25s; }
-        .test-result-card:hover { border-top-color: #c6f135; }
+        .test-result-card:hover { border-top-color: #3b5bdb; }
         .test-result-status { font-family: var(--font-dm-mono, monospace); font-size: 9.5px; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 10px; }
         .test-result-label { font-family: var(--font-bebas-neue, sans-serif); font-size: 1.3rem; color: #fff; margin-bottom: 8px; }
         .test-result-note { font-family: var(--font-space-grotesk, sans-serif); font-size: 0.84rem; line-height: 1.65; color: rgba(255,255,255,0.32); }
         .challenges-heading { font-family: var(--font-dm-mono, monospace); font-size: 11px; letter-spacing: 0.24em; color: rgba(255,255,255,0.25); text-transform: uppercase; margin-bottom: 24px; }
         .challenges-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: rgba(255,255,255,0.05); }
         .challenge-card { background: #06060a; padding: 30px 28px; border-left: 2px solid rgba(255,255,255,0.06); transition: border-left-color 0.25s; }
-        .challenge-card:hover { border-left-color: #7b6cff; }
+        .challenge-card:hover { border-left-color: #1e3a8a; }
         .challenge-icon { font-size: 1.8rem; margin-bottom: 16px; display: block; }
         .challenge-title { font-family: var(--font-bebas-neue, sans-serif); font-size: 1.4rem; color: #fff; margin-bottom: 10px; }
         .challenge-desc { font-family: var(--font-space-grotesk, sans-serif); font-size: 0.88rem; line-height: 1.75; color: rgba(255,255,255,0.38); }
@@ -54,7 +54,7 @@ export default function TestingSection() {
         <div className="test-results-grid">
           {RESULTS.map((r) => (
             <div key={r.label} className="test-result-card">
-              <div className="test-result-status" style={{ color: r.status === "Passed" ? "#c6f135" : "#ff6b35" }}>
+              <div className="test-result-status" style={{ color: r.status === "Passed" ? "#3b5bdb" : "#5b7fff" }}>
                 {r.status === "Passed" ? "✓" : "◎"} {r.status}
               </div>
               <div className="test-result-label">{r.label}</div>

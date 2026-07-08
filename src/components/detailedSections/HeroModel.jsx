@@ -3,6 +3,22 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
+
+function disposeObject3D(obj) {
+  obj.traverse((child) => {
+    if (child.geometry) child.geometry.dispose();
+    if (child.material) {
+      const mats = Array.isArray(child.material) ? child.material : [child.material];
+      mats.forEach((m) => {
+        Object.values(m).forEach((v) => {
+          if (v && v.isTexture) v.dispose();
+        });
+        m.dispose();
+      });
+    }
+  });
+}
 
 export default function HeroModel({ onReady }) {
   const mountRef = useRef(null);
@@ -10,6 +26,9 @@ export default function HeroModel({ onReady }) {
   useEffect(() => {
     const mount = mountRef.current;
     if (!mount) return;
+
+    let cancelled = false;
+    let model = null;
 
     // ── Renderer ────────────────────────────────────────────────────────
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -100,11 +119,16 @@ export default function HeroModel({ onReady }) {
 
     // ── Load model ──────────────────────────────────────────────────────
     const loader = new GLTFLoader();
-    let model = null;
 
     loader.load(
       "/models/scene.glb",
       (gltf) => {
+        if (cancelled) {
+          // Component unmounted before load finished — dispose immediately,
+          // don't leak GPU memory or a dangling WebGL context.
+          disposeObject3D(gltf.scene);
+          return;
+        }
         model = gltf.scene;
         model.scale.setScalar(1.6);
         model.position.set(0.4, -0.2, 0);
@@ -113,7 +137,11 @@ export default function HeroModel({ onReady }) {
         onReady?.();
       },
       undefined,
-      (err) => console.error("GLB load error:", err)
+      (err) => {
+        console.error("GLB load error:", err);
+        // Reveal the section anyway instead of leaving it permanently blank.
+        if (!cancelled) onReady?.();
+      }
     );
 
     // ── Resize ──────────────────────────────────────────────────────────
@@ -157,18 +185,28 @@ export default function HeroModel({ onReady }) {
 
     // ── Cleanup ─────────────────────────────────────────────────────────
     return () => {
+      cancelled = true;
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", onResize);
       mount.removeEventListener("pointerdown", onPointerDown);
       mount.removeEventListener("pointermove", onPointerMove);
       mount.removeEventListener("pointerup", onPointerUp);
       mount.removeEventListener("pointercancel", onPointerUp);
+
+      if (model) {
+        disposeObject3D(model);
+        scene.remove(model);
+      }
+
       renderer.dispose();
+      // Explicitly force the GL context to be released so the browser's
+      // live-context count doesn't creep up across route changes / remounts.
+      renderer.forceContextLoss();
       if (mount.contains(renderer.domElement)) {
         mount.removeChild(renderer.domElement);
       }
     };
-  }, []);
+  }, [onReady]);
 
   return (
     <div

@@ -1,10 +1,11 @@
 export const TEAM = [
-  { name: "Taufeeq Iqbal Khan", reg: "2241011049" },
-  { name: "Ansuman Parida", reg: "2241016188" },
-  { name: "Aditya Ray", reg: "2241018099" },
-  { name: "Aditya Padhi", reg: "2241016007" },
-  { name: "Chinmoy Patra", reg: "2241016265" },
-  { name: "Abhijeet Bej", reg: "2241002129" },
+  { name: "Taufeeq Iqbal Khan", reg: "2241011049",team:"drone" },
+  { name: "Ansuman Parida", reg: "2241016188",team:"drone" },
+  { name: "Aditya Ray", reg: "2241018099",team:"drone" },
+  { name: "Aditya Padhi", reg: "2241016007",team:"drone" },
+  { name: "Chinmoy Patra", reg: "2241016265",team:"drone" },
+  { name: "Abhijeet Bej", reg: "2241002129",team:"drone" },
+  { name: "Noble Paul (Github - @noblepaul995)", reg: "21516516",team:"web" },
 ];
 
 export const SUBSYSTEMS = [
@@ -15,10 +16,10 @@ export const SUBSYSTEMS = [
     color: "#c6f135",
     glyph: "⬡",
     components: [
-      { name: "F405 Flight Controller", role: "64-bit onboard flying computer — stabilization, motor timing & sensor fusion", model: "/models/FlightController.glb" },
-      { name: "4-in-1 ESC + PDB", role: "Motor drive via PWM · Distributes regulated 5V to all onboard electronics", model: "/models/esc-pdb.glb" },
-      { name: "Brushless Motors ×4", role: "2× CW · 2× CCW for torque balance — Newton's 3rd law thrust generation", model: "/models/brushless-motor.glb" },
-      { name: "Li-Po Battery", role: "Primary high-discharge power source feeding the entire system", model: "/models/lipo-battery.glb" },
+      { name: "F405 Flight Controller", role: "64-bit onboard flying computer — stabilization, motor timing & sensor fusion", model: "/models/FlightController-optimized.glb" },
+      { name: "4-in-1 ESC + PDB", role: "Motor drive via PWM · Distributes regulated 5V to all onboard electronics", model: "/models/esc-pdb-optimized.glb" },
+      { name: "Brushless Motors ×4", role: "2× CW · 2× CCW for torque balance — Newton's 3rd law thrust generation", model: "/models/brushless-motor-optimized.glb" },
+      { name: "Li-Po Battery", role: "Primary high-discharge power source feeding the entire system", model: "/models/lipo-battery-optimized.glb" },
     ],
     stat: "PWM",
     statLabel: "Motor Protocol",
@@ -31,9 +32,9 @@ export const SUBSYSTEMS = [
     color: "#7b6cff",
     glyph: "◈",
     components: [
-      { name: "Arduino UNO", role: "Runs independently from FC · Reads DHT11 · Relays data over Bluetooth serial", model: "/models/arduino-uno.glb" },
-      { name: "DHT11 Sensor", role: "Temperature & humidity · Data pin D2 · Updates every 2 seconds", model: "/models/dht11.glb" },
-      { name: "HC-05 Bluetooth", role: "2.4 GHz · ~10 m range · 9600 baud rate — matches serial config", model: "/models/hc05.glb" },
+      { name: "Arduino UNO", role: "Runs independently from FC · Reads DHT11 · Relays data over Bluetooth serial", model: "/models/arduino-uno-optimized.glb" },
+      { name: "DHT11 Sensor", role: "Temperature & humidity · Data pin D2 · Updates every 2 seconds", model: "/models/dht11-optimized.glb" },
+      { name: "HC-05 Bluetooth", role: "2.4 GHz · ~10 m range · 9600 baud rate — matches serial config", model: "/models/hc05-optimized.glb" },
     ],
     stat: "9600",
     statLabel: "Baud Rate",
@@ -46,9 +47,9 @@ export const SUBSYSTEMS = [
     color: "#ff6b35",
     glyph: "◉",
     components: [
-      { name: "NEO-7M GPS", role: "UART · ±2.5 m horizontal accuracy · Position hold, RTH & mission waypoints", model: "/models/gps-neo7m.glb" },
-      { name: "ESP32-CAM (OV2640)", role: "MJPEG stream on port 80 · Accessible via browser at http://ESP32-IP/stream", model: "/models/esp32-cam.glb" },
-      { name: "FlySky i6 Receiver", role: "PPM output · 2.4 GHz AFHDS · 500 m–1 km line-of-sight range", model: "/models/flysky-receiver.glb" },
+      { name: "NEO-7M GPS", role: "UART · ±2.5 m horizontal accuracy · Position hold, RTH & mission waypoints", model: "/models/gps-neo7m-optimized.glb" },
+      { name: "ESP32-CAM (OV2640)", role: "MJPEG stream on port 80 · Accessible via browser at http://ESP32-IP/stream", model: "/models/esp32-cam-optimized.glb" },
+      { name: "FlySky i6 Receiver", role: "PPM output · 2.4 GHz AFHDS · 500 m–1 km line-of-sight range", model: "/models/flysky-receiver-optimized.glb" },
     ],
     stat: "MJPEG",
     statLabel: "Stream Format",

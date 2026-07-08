@@ -10,7 +10,11 @@ import CommsSection from "@/components/CommsSection";
 import RotationSection from "@/components/RotationSection";
 import SoftwareSection from "@/components/SoftwareSection";
 import TestingSection from "@/components/TestingSection";
-import FooterSection from "@/components/FooterSection";
+import Footer from "@/components/FooterSection";
+import FutureEnhancementsSection from "./FutureEnhancementsSection";
+import BuildForFieldSection from "./BuildForFieldSection";
+import TeamCredits from "./TeamSection";
+import ContactSection from "./ContactSection";
 
 export default function SkysensePage() {
   return (
@@ -29,18 +33,22 @@ export default function SkysensePage() {
           * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
         }
       `}</style>
-      <HeroSection />
+      <HeroSection id="home" />
       <GallerySection />
-      <ProblemSection />
-      <ArchitectureSection />
-      <SpecsSection />
-      
+      <ProblemSection id="problem" />
+      <ArchitectureSection id="architecture" />
+      <SpecsSection id="specs" />
+
       <FlowSection />
       <CommsSection />
       <RotationSection />
-      <SoftwareSection />
+      <SoftwareSection id="software" />
       <TestingSection />
-      <FooterSection />
+      <BuildForFieldSection />
+      <FutureEnhancementsSection />
+      <TeamCredits id="team" />
+      <ContactSection id="contact" />
+      <Footer />
     </>
   );
 }

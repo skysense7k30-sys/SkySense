@@ -7,7 +7,7 @@ import SpecIcon from "./icons/SpecIcon";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function SpecsSection() {
+export default function SpecsSection({id}) {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -25,10 +25,10 @@ export default function SpecsSection() {
         .specs-section { background: #06060a; padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 6vw, 6rem); }
         .specs-label { font-family: var(--font-dm-mono, monospace); font-size: 11px; letter-spacing: 0.24em; color: rgba(255,255,255,0.25); text-transform: uppercase; margin-bottom: 16px; }
         .specs-heading { font-family: var(--font-bebas-neue, sans-serif); font-size: clamp(2.4rem, 5vw, 4rem); color: #fff; line-height: 1.05; margin-bottom: 48px; }
-        .specs-heading em { color: #ff6b35; font-style: normal; }
+        .specs-heading em { color: #3b5bdb; font-style: normal; }
         .specs-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(255,255,255,0.06); }
         .spec-item { position: relative; background: #06060a; padding: 22px 20px; border-bottom: 2px solid transparent; transition: border-color 0.25s, background 0.25s; cursor: pointer; }
-        .spec-item:hover { border-bottom-color: #ff6b35; background: #0a0a14; }
+        .spec-item:hover { border-bottom-color: #3b5bdb; background: #0a0a14; }
         .spec-label { font-family: var(--font-dm-mono, monospace); font-size: 9.5px; letter-spacing: 0.18em; color: rgba(255,255,255,0.25); text-transform: uppercase; margin-bottom: 8px; }
         .spec-value { font-family: var(--font-bebas-neue, sans-serif); font-size: 1.3rem; letter-spacing: 0.04em; color: #fff; }
 
@@ -79,7 +79,7 @@ export default function SpecsSection() {
           transition: color 0.25s, transform 0.25s;
         }
         .spec-item:hover .spec-card-icon-box svg {
-          color: #ff6b35;
+          color: #3b5bdb;
           transform: scale(1.08);
         }
 
@@ -88,7 +88,7 @@ export default function SpecsSection() {
           font-size: 9px;
           letter-spacing: 0.16em;
           text-transform: uppercase;
-          color: #ff6b35;
+          color: #3b5bdb;
           margin-bottom: 6px;
         }
         .spec-card-stat {
@@ -125,7 +125,7 @@ export default function SpecsSection() {
           .spec-card::after { display: none; }
         }
       `}</style>
-      <section className="specs-section" ref={ref}>
+      <section className="specs-section" ref={ref} id={id}>
         <div className="specs-label">Hardware Specifications</div>
         <h2 className="specs-heading">Every component,<br /><em>by the spec.</em></h2>
         <div className="specs-grid">
