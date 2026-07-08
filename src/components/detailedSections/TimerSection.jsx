@@ -4,7 +4,7 @@ import { useRef, useCallback, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 
-const HeroModel = dynamic(() => import("./HeroModel"), {
+const HeroModel = dynamic(() => import("./HeroModel2"), {
   ssr: false,
   loading: () => null,
 });
@@ -111,6 +111,55 @@ function DashboardSegment({ value, label }) {
   );
 }
 
+// Infinite horizontal-scrolling marquee band
+function InfiniteMarquee({ text = "SKYSENSE", repeat = 8 }) {
+  const items = Array.from({ length: repeat });
+  return (
+    <div
+      aria-hidden
+      style={{
+        position: "relative",
+        width: "100%",
+        overflow: "hidden",
+        borderTop: "1px solid rgba(255,255,255,0.07)",
+        borderBottom: "1px solid rgba(255,255,255,0.07)",
+        padding: "1rem 0",
+        zIndex: 5,
+      }}
+    >
+      <style>{`
+        @keyframes marquee-scroll {
+          from { transform: translateX(0); }
+          to { transform: translateX(-50%); }
+        }
+        .marquee-track {
+          display: flex;
+          width: max-content;
+          animation: marquee-scroll 18s linear infinite;
+        }
+        .marquee-track span {
+          font-family: 'Instrument Sans', sans-serif;
+          font-size: clamp(1.4rem, 3.5vw, 2.6rem);
+          font-weight: 600;
+          letter-spacing: -0.01em;
+          color: rgba(255,255,255,0.08);
+          -webkit-text-stroke: 1px rgba(255,255,255,0.25);
+          padding: 0 2rem;
+          white-space: nowrap;
+        }
+      `}</style>
+      <div className="marquee-track">
+        {items.map((_, i) => (
+          <span key={`a-${i}`}>{text}</span>
+        ))}
+        {items.map((_, i) => (
+          <span key={`b-${i}`}>{text}</span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function TimerSection({ id, targetDate = "2026-07-16T18:00:00" }) {
   const sceneRef = useRef(null);
   const target = useRef(new Date(targetDate));
@@ -158,6 +207,7 @@ export default function TimerSection({ id, targetDate = "2026-07-16T18:00:00" })
           opacity: 0;
           transform: scale(0.96);
           transition: opacity 2s ease-out 0.2s, transform 2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
+          pointer-events: none;
         }
         .scene-container[data-visible="true"] {
           opacity: 1;
@@ -191,16 +241,13 @@ export default function TimerSection({ id, targetDate = "2026-07-16T18:00:00" })
             {display.done ? "System: Operational" : "System: Countdown Mode"}
           </div>
         </div>
-        <div style={{ fontSize: "11px", letterSpacing: "0.15em", color: "rgba(255,255,255,0.4)", textAlign: "right" }}>
-          SYS.LOC // 001-A
-        </div>
+        
       </div>
 
       {/* ── MAIN ASYMMETRIC CONTENT GRID ────────────────────────────────── */}
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "window.innerWidth < 960 ? '1fr' : '1.2fr 1fr'",
           flexGrow: 1,
           alignItems: "center",
           gap: "3rem",
@@ -226,9 +273,6 @@ export default function TimerSection({ id, targetDate = "2026-07-16T18:00:00" })
         {/* Left Column: Bold Industrial Counter & Caption */}
         <motion.div variants={panelSlideIn} initial="hidden" animate="show" style={{ display: "flex", flexDirection: "column", gap: "2.5rem" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-            <span style={{ fontSize: "11px", letterSpacing: "0.3em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)" }}>
-              Projected Sequence
-            </span>
             <h2 style={{ fontFamily: "'Instrument Sans', sans-serif", fontSize: "clamp(1.8rem, 4vw, 3.2rem)", fontWeight: 500, color: "#fff", margin: 0, letterSpacing: "-0.02em", lineHeight: 1.1 }}>
               {display.done ? "SkySense Active." : "Next Gen Flight Telemetry."}
             </h2>
@@ -269,7 +313,7 @@ export default function TimerSection({ id, targetDate = "2026-07-16T18:00:00" })
           <div style={{ position: "absolute", top: "12px", right: "12px", width: "8px", height: "8px", borderTop: "1px solid rgba(255,255,255,0.3)", borderRight: "1px solid rgba(255,255,255,0.3)", pointerEvents: "none", zIndex: 3 }} />
           <div style={{ position: "absolute", bottom: "12px", left: "12px", width: "8px", height: "8px", borderBottom: "1px solid rgba(255,255,255,0.3)", borderLeft: "1px solid rgba(255,255,255,0.3)", pointerEvents: "none", zIndex: 3 }} />
           <div style={{ position: "absolute", bottom: "12px", right: "12px", width: "8px", height: "8px", borderBottom: "1px solid rgba(255,255,255,0.3)", borderRight: "1px solid rgba(255,255,255,0.3)", pointerEvents: "none", zIndex: 3 }} />
-          
+
           <div style={{ position: "absolute", bottom: "12px", left: "30px", fontFamily: "'Instrument Sans', sans-serif", fontSize: "9px", color: "rgba(255,255,255,0.25)", letterSpacing: "0.1em", zIndex: 3, textTransform: "uppercase" }}>
             M_MODEL // SCALE 1.0
           </div>
@@ -286,11 +330,14 @@ export default function TimerSection({ id, targetDate = "2026-07-16T18:00:00" })
           >
             <HeroModel onReady={handleSceneReady} />
           </div>
-          
+
           {/* Subtle vignette localized purely inside the viewport framework */}
           <div aria-hidden style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 50% 50%, transparent 20%, rgba(10,10,12,0.6) 100%)", pointerEvents: "none", zIndex: 2 }} />
         </motion.div>
       </div>
+
+      {/* ── INFINITE SKYSENSE MARQUEE ───────────────────────────────────── */}
+      <InfiniteMarquee text="SKYSENSE" />
 
       {/* ── FOOTER DATA READOUTS ────────────────────────────────────────── */}
       <motion.div
@@ -300,10 +347,12 @@ export default function TimerSection({ id, targetDate = "2026-07-16T18:00:00" })
         style={{
           display: "flex",
           flexWrap: "wrap",
-          gap: "2rem row-gap: 1rem",
+          gap: "2rem",
+          rowGap: "1rem",
           justifyContent: "space-between",
           borderTop: "1px solid rgba(255,255,255,0.07)",
           paddingTop: "1.5rem",
+          marginTop: "1.5rem",
           zIndex: 10,
           fontFamily: "'Instrument Sans', sans-serif",
           fontSize: "10px",
