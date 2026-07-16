@@ -1,31 +1,28 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Volume2, VolumeX } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function GallerySection() {
   const ref = useRef(null);
+  const videoRef = useRef(null);
+  const [muted, setMuted] = useState(true);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from(".gallery-label", {
-        scrollTrigger: {
-          trigger: ref.current,
-          start: "top 80%",
-        },
+        scrollTrigger: { trigger: ref.current, start: "top 80%" },
         opacity: 0,
         y: 16,
         duration: 0.5,
       });
 
       gsap.from(".gallery-heading", {
-        scrollTrigger: {
-          trigger: ref.current,
-          start: "top 75%",
-        },
+        scrollTrigger: { trigger: ref.current, start: "top 75%" },
         y: 50,
         opacity: 0,
         duration: 0.7,
@@ -33,10 +30,7 @@ export default function GallerySection() {
       });
 
       gsap.from(".gallery-video-frame", {
-        scrollTrigger: {
-          trigger: ref.current,
-          start: "top 70%",
-        },
+        scrollTrigger: { trigger: ref.current, start: "top 70%" },
         opacity: 0,
         scale: 0.97,
         duration: 0.7,
@@ -46,6 +40,13 @@ export default function GallerySection() {
 
     return () => ctx.revert();
   }, []);
+
+  const toggleAudio = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !videoRef.current.muted;
+      setMuted(videoRef.current.muted);
+    }
+  };
 
   return (
     <>
@@ -121,33 +122,10 @@ export default function GallerySection() {
           pointer-events: none;
         }
 
-        .gallery-corner.tl {
-          top: 14px;
-          left: 14px;
-          border-right: none;
-          border-bottom: none;
-        }
-
-        .gallery-corner.tr {
-          top: 14px;
-          right: 14px;
-          border-left: none;
-          border-bottom: none;
-        }
-
-        .gallery-corner.bl {
-          bottom: 14px;
-          left: 14px;
-          border-right: none;
-          border-top: none;
-        }
-
-        .gallery-corner.br {
-          bottom: 14px;
-          right: 14px;
-          border-left: none;
-          border-top: none;
-        }
+        .gallery-corner.tl { top: 14px; left: 14px; border-right: none; border-bottom: none; }
+        .gallery-corner.tr { top: 14px; right: 14px; border-left: none; border-bottom: none; }
+        .gallery-corner.bl { bottom: 14px; left: 14px; border-right: none; border-top: none; }
+        .gallery-corner.br { bottom: 14px; right: 14px; border-left: none; border-top: none; }
 
         .gallery-video-badge {
           position: absolute;
@@ -177,25 +155,35 @@ export default function GallerySection() {
         }
 
         @keyframes gallery-pulse {
-          0%,100% {
-            opacity: 1;
-            transform: scale(1);
-          }
-          50% {
-            opacity: .35;
-            transform: scale(.8);
-          }
+          0%,100% { opacity: 1; transform: scale(1); }
+          50% { opacity: .35; transform: scale(.8); }
+        }
+
+        .gallery-audio-btn {
+          position: absolute;
+          top: 14px;
+          right: 14px;
+          width: 34px;
+          height: 34px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(0,0,0,0.5);
+          border: 1px solid rgba(255,255,255,0.15);
+          backdrop-filter: blur(4px);
+          cursor: pointer;
+          z-index: 3;
+          transition: background 0.2s ease, border-color 0.2s ease;
+        }
+
+        .gallery-audio-btn:hover {
+          background: rgba(59,91,219,0.35);
+          border-color: rgba(59,91,219,0.6);
         }
       `}</style>
 
-      <section
-        className="gallery-section"
-        ref={ref}
-        id = "gallery"
-      >
-        <div className="gallery-label">
-          Project Gallery
-        </div>
+      <section className="gallery-section" ref={ref} id="gallery">
+        <div className="gallery-label">Project Gallery</div>
 
         <h2 className="gallery-heading">
           The build,
@@ -205,10 +193,11 @@ export default function GallerySection() {
 
         <div className="gallery-video-frame">
           <video
+            ref={videoRef}
             autoPlay
-            
             loop
             playsInline
+            muted={muted}
             className="w-full h-auto"
           >
             <source
@@ -228,6 +217,18 @@ export default function GallerySection() {
             <span className="gallery-live-dot" />
             Build Footage
           </div>
+
+          <button
+            className="gallery-audio-btn"
+            onClick={toggleAudio}
+            aria-label={muted ? "Unmute video" : "Mute video"}
+          >
+            {muted ? (
+              <VolumeX size={16} color="#fff" />
+            ) : (
+              <Volume2 size={16} color="#3b5bdb" />
+            )}
+          </button>
         </div>
       </section>
     </>
