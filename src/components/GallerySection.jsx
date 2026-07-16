@@ -206,7 +206,7 @@ export default function GallerySection() {
         <div className="gallery-video-frame">
           <video
             autoPlay
-            muted
+            
             loop
             playsInline
             className="w-full h-auto"
