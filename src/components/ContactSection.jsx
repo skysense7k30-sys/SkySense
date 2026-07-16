@@ -54,7 +54,7 @@ export default function ContactSection({ id }) {
       <style>{`
         .cnt2-section { background: #06060a; padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 6vw, 6rem); }
         .cnt2-label { font-family: var(--font-dm-mono, monospace); font-size: 11px; letter-spacing: 0.24em; color: rgba(255,255,255,0.25); text-transform: uppercase; margin-bottom: 40px; }
-        .cnt2-stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(255,255,255,0.06); margin-bottom: 64px; }
+        .cnt2-stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(255,255,255,0.06); margin-bottom: 64px; }
         .cnt2-stat { background: #06060a; padding: 28px 24px; border-top: 2px solid transparent; transition: border-color 0.3s; }
         .cnt2-stat:hover { border-top-color: #3b5bdb; }
         .cnt2-stat .val { font-family: var(--font-bebas-neue, sans-serif); font-size: clamp(1.6rem, 3vw, 2.4rem); color: #3b5bdb; line-height: 1; display: block; margin-bottom: 6px; letter-spacing: 0.02em; }
