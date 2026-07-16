@@ -13,7 +13,7 @@ const CHANNELS = [
 
 export default function ContactSection({ id }) {
   const ref = useRef(null);
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
   const [sent, setSent] = useState(false);
 
   useEffect(() => {
@@ -27,7 +27,12 @@ export default function ContactSection({ id }) {
   }, []);
 
   function handleChange(e) {
-    setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    if (name === "phone") {
+      setForm((f) => ({ ...f, phone: value.replace(/\D/g, "") }));
+      return;
+    }
+    setForm((f) => ({ ...f, [name]: value }));
   }
 
   async function handleSubmit(e) {
@@ -141,6 +146,10 @@ export default function ContactSection({ id }) {
                 <div className="cnt2-field">
                   <label htmlFor="cnt2-email">Email</label>
                   <input id="cnt2-email" name="email" type="email" placeholder="you@domain.com" value={form.email} onChange={handleChange} required />
+                </div>
+                <div className="cnt2-field">
+                  <label htmlFor="cnt2-phone">Phone (optional)</label>
+                  <input id="cnt2-phone" name="phone" type="text" inputMode="numeric" pattern="[0-9]*" placeholder="5551234567" value={form.phone} onChange={handleChange} maxLength={15} />
                 </div>
                 <div className="cnt2-field">
                   <label htmlFor="cnt2-message">Message</label>
