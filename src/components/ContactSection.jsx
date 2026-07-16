@@ -6,8 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const CHANNELS = [
-  { val: "EMAIL", desc: "contact@skysense.dev" },
-  { val: "GITHUB", desc: "/skysense-project" },
+  { val: "EMAIL", desc: "skysense7k30@gmail.com " },
   { val: "STATUS", desc: "Actively maintained" },
   { val: "< 24h", desc: "Typical response" },
 ];
