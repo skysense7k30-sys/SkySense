@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Volume2, VolumeX } from "lucide-react";
+import { Volume2, VolumeX, RotateCcw } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -45,6 +45,13 @@ export default function GallerySection() {
     if (videoRef.current) {
       videoRef.current.muted = !videoRef.current.muted;
       setMuted(videoRef.current.muted);
+    }
+  };
+
+  const restartVideo = () => {
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play();
     }
   };
 
@@ -159,10 +166,16 @@ export default function GallerySection() {
           50% { opacity: .35; transform: scale(.8); }
         }
 
-        .gallery-audio-btn {
+        .gallery-controls {
           position: absolute;
           top: 14px;
           right: 14px;
+          display: flex;
+          gap: 8px;
+          z-index: 3;
+        }
+
+        .gallery-ctrl-btn {
           width: 34px;
           height: 34px;
           display: flex;
@@ -172,11 +185,10 @@ export default function GallerySection() {
           border: 1px solid rgba(255,255,255,0.15);
           backdrop-filter: blur(4px);
           cursor: pointer;
-          z-index: 3;
           transition: background 0.2s ease, border-color 0.2s ease;
         }
 
-        .gallery-audio-btn:hover {
+        .gallery-ctrl-btn:hover {
           background: rgba(59,91,219,0.35);
           border-color: rgba(59,91,219,0.6);
         }
@@ -218,17 +230,27 @@ export default function GallerySection() {
             Build Footage
           </div>
 
-          <button
-            className="gallery-audio-btn"
-            onClick={toggleAudio}
-            aria-label={muted ? "Unmute video" : "Mute video"}
-          >
-            {muted ? (
-              <VolumeX size={16} color="#fff" />
-            ) : (
-              <Volume2 size={16} color="#3b5bdb" />
-            )}
-          </button>
+          <div className="gallery-controls">
+            <button
+              className="gallery-ctrl-btn"
+              onClick={restartVideo}
+              aria-label="Restart video"
+            >
+              <RotateCcw size={15} color="#fff" />
+            </button>
+
+            <button
+              className="gallery-ctrl-btn"
+              onClick={toggleAudio}
+              aria-label={muted ? "Unmute video" : "Mute video"}
+            >
+              {muted ? (
+                <VolumeX size={16} color="#fff" />
+              ) : (
+                <Volume2 size={16} color="#3b5bdb" />
+              )}
+            </button>
+          </div>
         </div>
       </section>
     </>
